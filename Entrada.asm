@@ -20,12 +20,16 @@ section .data
     Output12: db "x^2 $"
     Output13: db "x $"
     Output14: db "La funcion almacenada es f(x) = $"
-    Output15: db "Presione 0 para volver al menu $"
+    Output15: db "  Presione 0 para volver al menu $"
     Output16: db "La derivada de la funcion es f'(x) =  $"
     Output17: db "La integral de la funcion es F(x) =  $"
     Output18: db "x^6 $"
     Output19: db "+ C $"
-    Output20: db "ERROR: Solo se permiten numeros enteros, presione 0 para continuar..."
+    Output20: db "  ERROR: Solo se permiten numeros enteros, presione 0 para continuar... $"
+    Output21: db "  Esta funcionalidad aun no esta disponible. $"
+    Output22: db "  Saliendoo del programa... $"
+    Output23: db " > $"
+    Output24: db "  ERROR: La opcion ingresada no es valida... $"
     negativo: db "-$"
     positivo: db "+$"
     der_x5: db '0'
@@ -98,6 +102,10 @@ _start:
 
 
 _getEntrada:
+    mov ah, 09h
+    mov dx, Output23
+    int 21h
+
     mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
     mov al, opcion
     int 21h
@@ -113,7 +121,30 @@ _getEntrada:
 
     cmp al, 34h             ;Si el caracter almacenado en al es 34h (4 en ascii) se ejecutará el método de imprimir integral
     je _imprimirIntegral
-    ret
+
+    cmp al, 35h             ;A partir de aquí, si la opción está entre 5 y 8 retornará un mensaje de no disponible
+    je _noDisponible
+
+    cmp al, 36h             
+    je _noDisponible
+
+    cmp al, 37h             
+    je _noDisponible
+
+    cmp al, 38h             
+    je _noDisponible
+
+    ;Si la opción es 9, el programa se detendrá
+    cmp al, 39h             
+    je _Salir
+
+    cmp al, 1bh             
+    je _Escape
+
+    jmp _opcionInvalida
+
+    ;Si no es ninguna, mostrará error por opción incorrecta.
+
 
     ret
 
@@ -164,9 +195,7 @@ _ingresarCoeficientes:
     add al, [u_x5]
     mov [n_x5], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     ;ingresando coeficiente x a la 4
     mov ah, 09h
@@ -195,9 +224,7 @@ _ingresarCoeficientes:
     add al, [u_x4]
     mov [n_x4], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     ;ingresando coeficiente x a la 3
     mov ah, 09h
@@ -226,9 +253,7 @@ _ingresarCoeficientes:
     add al, [u_x3]
     mov [n_x3], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     ;ingresando coeficiente x a la 2
     mov ah, 09h
@@ -257,9 +282,7 @@ _ingresarCoeficientes:
     add al, [u_x2]
     mov [n_x2], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     ;ingresando coeficiente x a la 1
     mov ah, 09h
@@ -288,9 +311,7 @@ _ingresarCoeficientes:
     add al, [u_x1]
     mov [n_x1], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     ;ingresando coeficiente x a la 0
     mov ah, 09h
@@ -319,24 +340,16 @@ _ingresarCoeficientes:
     add al, [u_x0]
     mov [n_x0], al
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output8
     int 21h 
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
+    call _lineaNueva
 
     mov ah, 01h
     int 21h
@@ -351,13 +364,9 @@ _verFuncion:
     mov al, 03h
     int 10h
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output14
@@ -497,24 +506,16 @@ _verFuncion:
     add dl, 30h
     int 21h
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output15
     int 21h 
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
+    call _lineaNueva
 
     mov ah, 01h
     int 21h
@@ -528,9 +529,7 @@ _imprimirDerivada:
     mov al, 03h
     int 10h
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output16
@@ -677,13 +676,9 @@ _imprimirDerivada:
     add dl, 30h
     int 21h
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output15
@@ -701,9 +696,7 @@ _imprimirIntegral:
     mov al, 03h
     int 10h
 
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
+    call _lineaNueva
 
     mov ah, 09h
     mov dx, Output17
@@ -911,6 +904,34 @@ _noEsNumero:
 
     call _lineaNueva
     call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output23
+    int 21h
+
+    mov ah, 01h
+    int 21h
+    cmp al, 30h             
+    je _start
+
+    ret
+
+_noDisponible:
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output21
+    int 21h
+
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output15
+    int 21h
+
+    call _lineaNueva
     call _lineaNueva
 
     mov ah, 01h
@@ -919,6 +940,44 @@ _noEsNumero:
     je _start
 
     ret
+
+_Salir:
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output22
+    int 21h
+
+    int 20h
+
+    ret
+
+_opcionInvalida:
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output24
+    int 21h
+
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output15
+    int 21h
+
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 01h
+    int 21h
+    cmp al, 30h             
+    je _start
+
+    ret
+    
 
 _limpiarPantalla:
     mov ah,00h             
@@ -930,6 +989,10 @@ _lineaNueva:
     mov ah, 09h
     mov dx, NuevaLinea
     int 21h
+    ret
+
+_Escape:
+    int 20h
     ret
 
 
