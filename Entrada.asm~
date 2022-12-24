@@ -25,9 +25,6 @@ section .data
     Output17: db "La integral de la funcion es F(x) =  $"
     Output18: db "x^6 $"
     Output19: db "+ C $"
-    Output20: db "ERROR: Solo se permiten numeros enteros, presione 0 para continuar..."
-    negativo: db "-$"
-    positivo: db "+$"
     der_x5: db '0'
     int_x5: db '0'
     s_x5: db '0'
@@ -145,10 +142,6 @@ _ingresarCoeficientes:
 
     mov ah, 01h
     int 21h
-    cmp al,'0'
-    jb _noEsNumero
-    cmp al, '9'
-    ja _noEsNumero
     sub al, 30h
     mov [d_x5], al
 
@@ -882,55 +875,6 @@ _imprimirIntegral:
 
     ret
 
-_signoPositivo:
-    mov ah, 09h
-    mov dx, positivo
-    int 21h
-
-    ret
-
-_signoNegativo:
-    mov ah, 09h
-    mov dx, negativo
-    int 21h
-
-    mov ah, 01h
-    int 21h
-    cmp al, 30h             
-    je _ingresarCoeficientes
-
-    ret
-
-_noEsNumero:
-    call _lineaNueva
-    call _lineaNueva
-
-    mov ah, 09h
-    mov dx, Output20
-    int 21h
-
-    call _lineaNueva
-    call _lineaNueva
-    call _lineaNueva
-
-    mov ah, 01h
-    int 21h
-    cmp al, 30h             
-    je _start
-
-    ret
-
-_limpiarPantalla:
-    mov ah,00h             
-    mov al, 03h
-    int 10h
-    ret
-
-_lineaNueva:
-    mov ah, 09h
-    mov dx, NuevaLinea
-    int 21h
-    ret
 
 
 
