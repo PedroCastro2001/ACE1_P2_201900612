@@ -30,6 +30,7 @@ section .data
     Output22: db "  Saliendoo del programa... $"
     Output23: db " > $"
     Output24: db "  ERROR: La opcion ingresada no es valida... $"
+    Output25: db "              $"
     negativo: db "-$"
     positivo: db "+$"
     der_x5: db '0'
@@ -63,6 +64,7 @@ section .data
     d_x1 db 0
     n_x1 db 0
     der_x0: db '0'
+    int_x0: db '0'
     s_x0: db '0'
     u_x0 db 0
     d_x0 db 0
@@ -535,6 +537,13 @@ _imprimirDerivada:
     mov dx, Output16
     int 21h
 
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output25
+    int 21h
+
     ;imprimir derivada de x5
     mov al, [n_x5]
     mov bl, 5
@@ -702,6 +711,14 @@ _imprimirIntegral:
     mov dx, Output17
     int 21h
 
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output25
+    int 21h
+
+
     xor ax, ax  ;limpiar registros
     ;imprimiendo integral de x5
     mov bl, 6
@@ -852,6 +869,36 @@ _imprimirIntegral:
     mov dx, Output12     
     int 21h
 
+    xor ax, ax  ;limpiar registros
+    ;imprimiendo integral de x0
+    mov bl, 1
+    mov al, [n_x0]
+    div bl
+    mov [int_x0], al
+
+    mov ah, 02h
+    mov dl, [s_x0]
+    add dl, 30h
+    int 21h
+
+    ;mensaje
+    mov al, [int_x0]
+    AAM
+    mov bx, ax
+    mov ah, 02h
+    mov dl, bh
+    add dl, 30h
+    int 21h
+
+    mov al, 02h
+    mov dl, bl
+    add dl, 30h
+    int 21h
+
+    mov ah, 09h
+    mov dx, Output13     
+    int 21h
+
     mov ah, 09h
     mov dx, Output19     
     int 21h
@@ -994,6 +1041,7 @@ _lineaNueva:
 _Escape:
     int 20h
     ret
+
 
 
 
