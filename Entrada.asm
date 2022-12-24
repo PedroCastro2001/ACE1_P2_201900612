@@ -91,8 +91,8 @@ _start:
     mov al, 03h             ;Obtener la posición y el tamaño del cursor
     int 10h                 ;Interrupción del BIOS
 
-    mov ah, 09h             ;Imprimir en pantalla lo que está en dx
-    mov dx, encabezado
+    mov ah, 09h             ;Instrucción para imprimir en pantalla lo que está en dx
+    mov dx, encabezado      ;Se mueve al registro dx la cadena que se encuentre en encabezado
     int 21h                 ;Interrupción del DOS
 
     mov ah, 09h
