@@ -35,6 +35,7 @@ section .data   ;definiendo la data antes de la compilación
     Output23: db " > $"
     Output24: db "  ERROR: La opcion ingresada no es valida... $"
     Output25: db "              $"
+    Output26: db " ERROR: No se ha almacenado ninguna funcion aun...$"
     negativo: db "-$"
     positivo: db "+$"
     der_x5: db '0'
@@ -374,6 +375,10 @@ _verFuncion:
 
     call _lineaNueva
 
+    mov ah, [n_x5]          ;si no se ha ingresado una función antes, devolverá error.
+    cmp ah, '0'
+    je _noFuncion
+
     mov ah, 09h
     mov dx, Output14
     int 21h
@@ -535,6 +540,10 @@ _imprimirDerivada:
     mov ah,00h              ;Limpiar la pantalla
     mov al, 03h
     int 10h
+
+    mov ah, [n_x5]          ;si no se ha ingresado una función antes, devolverá error.
+    cmp ah, '0'
+    je _noFuncion
 
     call _lineaNueva
 
@@ -711,6 +720,10 @@ _imprimirIntegral:
     mov ah,00h              ;Limpiar la pantalla
     mov al, 03h
     int 10h
+
+    mov ah, [n_x5]          ;si no se ha ingresado una función antes, devolverá error.
+    cmp ah, '0'
+    je _noFuncion
 
     call _lineaNueva
 
@@ -1050,6 +1063,27 @@ _lineaNueva:            ;Este metodo se llama cuando se quiere imprimir una nuev
 
 _Escape:                ;Si el usuario presiona la tecla ESC desde el menú, el programa se cierra.
     int 20h
+    ret
+
+_noFuncion:
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output26
+    int 21h
+
+    call _lineaNueva
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output15
+    int 21h
+
+    mov ah, 01h
+    int 21h
+    cmp al, 30h             
+    je _start
+
     ret
 
 
