@@ -8,7 +8,7 @@ section .data   ;definiendo la data antes de la compilación
     ;9h es un espacio de tabulación
     encabezado: db 0ah,"***************************** PROYECTO 2 FASE 1 *****************************",0,0ah,0ah,"Laboratorio Arquitectura de Computadoras y Ensambladores 1",0,0ah,"Pedro Antonio Castro Calderon",0,0ah,"201900612",0,0ah,0ah,"*****************************************************************************$"
     texto1 db 0ah,0ah,"Ingrese el numero de la opcion que desea, o pulse ESC para salir.",'$'
-    menu db 0ah,0ah,9h,"(1) Ingresar los coeficientes de la funcion",0ah,0dh,9h,"(2) Imprimir la funcion almacenada",0ah,0dh,9h,"(3) Imprimir derivada de la funcion almacenada",0ah,0dh,9h,"(4) Imprimir integral de la funcion almacenada",0ah,0dh,9h,"(5) Graficar la funcion",0ah,0dh,9h,"(6) Metodo de Newton",0ah,0dh,9h,"(7) Metodo de Steffensen",0ah,0dh,9h,"(8) Metodo de Miller",0ah,0dh,9h,"(9) Salir de la aplicacion",0ah,0dh,24h
+    menu db 0ah,0ah,9h,"(1) Ingresar los coeficientes de la funcion",0ah,0dh,9h,"(2) Imprimir la funcion almacenada",0ah,0dh,9h,"(3) Imprimir derivada de la funcion almacenada",0ah,0dh,9h,"(4) Imprimir integral de la funcion almacenada",0ah,0dh,9h,"(5) Graficar la funcion",0ah,0dh,9h,"(6) Metodo de Newton",0ah,0dh,9h,"(7) Metodo de Steffensen",0ah,0dh,9h,"(8) Salir de la aplicacion",0ah,0dh,24h
     NuevaLinea db 0ah,'$'
     Ouput1: db "Ingrese el coeficiente de x^5: $"
     Output2: db "Ingrese el coeficiente de x^4: $"
@@ -36,52 +36,107 @@ section .data   ;definiendo la data antes de la compilación
     Output24: db "  ERROR: La opcion ingresada no es valida... $"
     Output25: db "              $"
     Output26: db " ERROR: No se ha almacenado ninguna funcion aun...$"
+    Output27: db " Presione el numero de la opcion a graficar...$"
+    Output28: db 0ah,0ah,9h,"(1) Graficar funcion original",0ah,0dh,9h,"(2) Graficar derivada",0ah,0dh,9h,"(3) Graficar integral",0ah,0dh,24h
+    Output29: db " Prueba macro 1...$"
+    Output30: db " Prueba macro 2..$"
+    Output31: db " Tiene signo negativo..$"
+    Output32: db "Iteracion actual:$"
+    Output33: db "Xn:$"
+    Output34: db "Xn+1:$"
+    Output35: db "Error de Xn+1:$"
+    Output36: db "-----------------------------------------------$"
+    Output37: db "Se encontro la solucion en esta iteracion$"
+    Output38: db "No se encontro la solucion en el limite permitido$"
+    Output39: db " Ingrese Limite inferior: $"
+	Output40: db " Ingrese Limite superior: $"
+	Output41: db " Ingrese numero max. de iteraciones: $"
     negativo: db "-$"
     positivo: db "+$"
     der_x5: db '0'
     int_x5: db '0'
-    s_x5: db '0'
+    s_x5: db '+'
     u_x5: db '0'
     d_x5: db '0'
-    n_x5: db '0'
+    n_x5: db 0
     der_x4: db '0'
     int_x4: db '0'
-    s_x4: db '0'
-    u_x4 db 0
-    d_x4 db 0
-    n_x4 db 0
+    s_x4: db '+'
+    u_x4: db 0
+    d_x4: db 0
+    n_x4: db 0
     der_x3: db '0'
     int_x3: db '0'
-    s_x3: db '0'
-    u_x3 db 0
-    d_x3 db 0
-    n_x3 db 0
+    s_x3: db '+'
+    u_x3: db 0
+    d_x3: db 0
+    n_x3: db 1
     der_x2: db '0'
     int_x2: db '0'
-    s_x2: db '0'
-    u_x2 db 0
-    d_x2 db 0
-    n_x2 db 0
+    s_x2: db '-'
+    u_x2: db 0
+    d_x2: db 0
+    n_x2: db 0
     der_x1: db '0'
     int_x1: db '0'
-    s_x1: db '0'
-    u_x1 db 0
-    d_x1 db 0
-    n_x1 db 0
+    s_x1: db '-'
+    u_x1: db 0
+    d_x1: db 0
+    n_x1: db 1
     der_x0: db '0'
     int_x0: db '0'
-    s_x0: db '0'
-    u_x0 db 0
-    d_x0 db 0
-    n_x0 db 0
+    s_x0: db '+'
+    u_x0: db 0
+    d_x0: db 0
+    n_x0: db 0
+    h: dw (0)
+    w: dw (0)
+    coorx: db 10d
+    coory: db 3d
+
+    multiplicador: dq 10.0
+    flotante: dq 12
+    entero: dw 0
+    no_decimales: dw 8
+    punto: db ".$"
+
+	;Para metodos numericos
+    err: dq 0.005
+    error: dq 0.0
+    maximas_iteraciones: dw 2
+    s_maximas_iteraciones: dw '+'
+    x_inferior: dw -2
+    s_x_inferior: dw '+'
+    x_superior: dw -1
+    s_x_superior: dw '+'
+    xsub_n:	dq -1.5
+    xsub_nmas1: dq 0.0
+    temporal_word: dw 0
+    iteracion_actual: dw 0
+
+    ;Para el método de Newton
+    f_x: dq 0.0
+    fprima_x: dq 0.0
+    constante_2: dw 2
+    constante_10: dw 10
+
+    sol_newton_tmp1: dq 0.0
+
+    ;Para el metodo de Steffensen
+    stf_tmp_x: dq 1.0
+    stf_tmp_fx: dq 0.0
+    stf_tmp_derecha: dq 0.0
+    stf_tmp_gx_n: dq 0.0
 
     Signo: db 2Dh, '$'
+    espacio_salida: times 100 db 0
+    modo_redondeo: dw 0x0C3F
 
 section .bss ;Reservando bytes para su posterior uso
-    opcion resb 2
-    coefi5 resb 5
-    coefi4 resb 6
-    resultado resb 10
+    opcion: resb 2
+    coefi5: resb 5
+    coefi4: resb 6
+    resultado: resb 10
 
 section .text   ;aquí empezará la ejecución
     global _start
@@ -91,6 +146,7 @@ _start:
     mov ah,00h              ;Poner el modo video
     mov al, 03h             ;Obtener la posición y el tamaño del cursor
     int 10h                 ;Interrupción del BIOS
+	fldcw word [modo_redondeo]
 
     mov ah, 09h             ;Instrucción para imprimir en pantalla lo que está en dx
     mov dx, encabezado      ;Se mueve al registro dx la cadena que se encuentre en encabezado
@@ -104,9 +160,489 @@ _start:
     mov dx, menu
     int 21h
 
-    call _getEntrada        ;Llamando a que un método se ejecute
-
+    jmp _getEntrada        ;Llamando a que un método se ejecute
     int 20h                 ;terminar Programa
+
+
+_metodoSteffensen:
+	;Reseteamos la variable que nos dice la iteracion actual
+	mov word [iteracion_actual], 1
+
+	_metodoSteffensen_loop:
+
+		mov AX, word [maximas_iteraciones]
+		cmp word [iteracion_actual], AX
+		ja _metodoSteffensen_fallo
+
+		;Imprimir iteracion actual
+		mov AH, 0x9
+		mov DX,Output32
+		int 21h
+
+		push word 0
+		push word [iteracion_actual]
+		mov si, espacio_salida
+		call _ConvertirATexto
+		add sp, 4
+		mov ah, 0x9
+		mov dx, espacio_salida
+		int 21h
+
+		;Imprimir separador
+		mov AH, 0x9
+		mov DX,Output36
+		int 21h
+
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Imprimir Xn de esta iteracion
+		mov AH, 0x9
+		mov DX,Output33
+		int 21h
+
+		fld qword [xsub_n]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+
+		;Calculamos F(xn)
+		call _Calcular_f_x
+
+		;cargando en memoria xn
+		fld qword [xsub_n]
+		;Le hacemos una copia porque lo modificaremos
+		fstp qword [stf_tmp_x]
+
+		;cargando en memoria f(x)
+		fld qword [f_x]
+		;Le hacemos una copia porque lo necesitaremos varias veces
+		fst qword [stf_tmp_fx]
+
+		;Le sumamos xn para tener F(xn)+xn
+		fadd qword [xsub_n]
+		;Lo guardamos en xsub_n porque necesitamos valuar F(x) en este punto
+		fstp qword [xsub_n]
+
+		;Calculamos F(xn+F(xn))
+		call _Calcular_f_x
+		;cargando en memoria F(xn+F(xn))
+		fld qword [f_x]
+
+		;Le restamos F(xn) para tener F(xn+F(xn))-F(xn)
+		fsub qword [stf_tmp_fx]
+
+		;Lo dividimos por F(xn) para tener (F(xn+F(xn))-F(xn))/F(xn)
+		fdiv qword [stf_tmp_fx]
+
+		;Esto equivale a g(xn), lo guardamos para poderlo usar despues y lo sacamos del stack
+		fstp qword [stf_tmp_gx_n]
+
+		;Cargamos la copia que teniamos de F(xn)
+		fld qword [stf_tmp_fx]
+		;La dividimos por G(xn)
+		fdiv qword [stf_tmp_gx_n]
+
+		;Lo guardamos para poderlo usar despues y lo sacamos del stack
+		fstp qword [stf_tmp_derecha]
+
+		;Cargamos la copia que teniamos de xn
+		fld qword [stf_tmp_x]
+		;Le restamos la parte calculada anteriormente, que es F(xn)/G(xn)
+		fsub qword [stf_tmp_derecha]
+
+		;Esto equivale a Xn+1, lo guardamos
+		fst qword [xsub_nmas1]
+		;Le restamos X_n
+		fsub qword [xsub_n]
+		;Valor absoluto de la resta
+		fabs
+		;guardarlo en error
+		fstp qword [error]
+
+		;volviendo a cargar x_n+1
+		fld qword [xsub_nmas1]
+		;actualizando x_n
+		fstp qword [xsub_n]
+
+
+		;Imprimir Xn+1 de esta iteracion
+		mov AH, 0x9
+		mov DX,Output34
+		int 21h
+
+		fld qword [xsub_nmas1]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+
+		;Imprimir error de esta iteracion
+		mov AH, 0x9
+		mov DX,Output35
+		int 21h
+
+		fld qword [error]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+
+		;Miramos si la tolerancia ya se cumple
+		fld qword [error]
+		fcom qword [err]
+		fnstsw ax
+		sahf
+		jbe _metodoSteffensen_exito
+
+
+		inc word [iteracion_actual]
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8
+		int 21h
+
+		jmp _metodoSteffensen_loop
+
+
+	_metodoSteffensen_exito:
+		;Imprimir que se encontro la solucion
+		mov AH, 0x9
+		mov DX,Output37
+		int 21h
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8		
+		int 21h
+		ret
+
+	_metodoSteffensen_fallo:
+		;Imprimir que no se encontro la solucion
+		mov AH, 0x9
+		mov DX,Output38
+		int 21h
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8		
+		int 21h
+		ret
+
+
+_metodoNewton:
+	;Reseteamos la variable que nos dice la iteracion actual
+	mov word [iteracion_actual], 1
+
+	_metodoNewton_loop:
+
+		mov AX, word [maximas_iteraciones]
+		cmp word [iteracion_actual], AX
+		ja _metodoNewton_fallo
+
+		;Imprimir iteracion actual
+		mov AH, 0x9
+		mov DX,Output32
+		int 21h
+
+		push word 0
+		push word [iteracion_actual]
+		mov si, espacio_salida
+		call _ConvertirATexto
+		add sp, 4
+		mov ah, 0x9
+		mov dx, espacio_salida
+		int 21h
+
+		;Imprimir separador
+		mov AH, 0x9
+		mov DX,Output36
+		int 21h
+
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Imprimir Xn de esta iteracion
+		mov AH, 0x9
+		mov DX,Output33
+		int 21h
+
+		fld qword [xsub_n]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Calculamos F(xn)
+		call _Calcular_f_x
+		;Calculamos derivada de F(xn)
+		call _Calcular_d_f_x
+
+	;    ;DIVIDIENDO F(Xn) SOBRE F'(Xn)
+	    fld qword [f_x]         ;cargando en memoria el numerador f(x)
+	    fdiv qword [fprima_x]   ;cargando en memoria el denominador f'(x)
+	    fstp qword [sol_newton_tmp1] ;almacenando en variable temporal y se saca de la pila
+	    fld qword [xsub_n]      ;cargando en memoria x_sub n con la que valuamos
+	    fsub qword [sol_newton_tmp1]    ;le restamos el resultado de la division
+	    fst qword [xsub_nmas1]  ;Cargamos el resultado en X_n+1
+	    fsub qword [xsub_n]     ;Le restamos X_n
+	    fabs                    ;Valor absoluto de la resta
+	    fstp qword [error]              ;guardarlo en error
+
+	    fld qword [xsub_nmas1]  ;volviendo a cargar x_n+1
+	    fstp qword [xsub_n]     ;actualizando x_n
+
+		;Imprimir Xn+1 de esta iteracion
+		mov AH, 0x9
+		mov DX,Output34
+		int 21h
+
+		fld qword [xsub_nmas1]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+
+		;Imprimir error de esta iteracion
+		mov AH, 0x9
+		mov DX,Output35
+		int 21h
+
+		fld qword [error]		;Cargamos xn en el fpu
+		fstp qword [flotante]		;Lo ponemos en la variable utilizada por _imprimirflotante
+		call _imprimirflotante
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Miramos si la tolerancia ya se cumple
+		fld qword [error]
+		fcom qword [err]
+		fnstsw ax
+		sahf
+		jbe _metodoNewton_exito
+
+
+		inc word [iteracion_actual]
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8
+		int 21h
+
+		jmp _metodoNewton_loop
+
+
+	_metodoNewton_exito:
+		;Imprimir que se encontro la solucion
+		mov AH, 0x9
+		mov DX,Output37
+		int 21h
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8
+		int 21h
+		ret
+
+	_metodoNewton_fallo:
+		;Imprimir que no se encontro la solucion
+		mov AH, 0x9
+		mov DX,Output38
+		int 21h
+		call _lineaNueva    ;Llamando a función que imprime nueva linea
+
+		;Pausamos para poder leer los datos en pantalla
+		mov AH, 0x8		
+		int 21h
+		ret
+
+
+_Calcular_f_x:
+
+	fldz        ;Cargando 0 a memoria
+    fstp qword [f_x]    ;Ese 0 se resetea a f_x
+
+    ;multiplicando con coeficiente x_5
+    fld qword [xsub_n] ;Cargando x actual en memoria
+    fmul qword [xsub_n]
+    fmul qword [xsub_n]
+    fmul qword [xsub_n]
+    fmul qword [xsub_n]
+
+    mov ax, 0
+    mov al, byte [n_x5]
+    mov word [temporal_word], AX
+    fimul word [temporal_word]
+    cmp byte [s_x5], '+'
+    je _Calcular_f_x_x_5_es_positivo
+	fchs
+	_Calcular_f_x_x_5_es_positivo:
+	fadd qword [f_x]
+    fstp qword [f_x]
+
+	;multiplicando con coeficiente x_4
+	fld qword [xsub_n] ;Cargando x actual en memoria
+	fmul qword [xsub_n]
+	fmul qword [xsub_n]
+	fmul qword [xsub_n]
+
+	mov ax, 0
+	mov al, byte [n_x4]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+	cmp byte [s_x4], '+'
+	je _Calcular_f_x_x_4_es_positivo
+	fchs
+	_Calcular_f_x_x_4_es_positivo:
+	fadd qword [f_x]
+	fstp qword [f_x]
+
+	;multiplicando con coeficiente x_3
+	fld qword [xsub_n] ;Cargando x actual en memoria
+	fmul qword [xsub_n]
+	fmul qword [xsub_n]
+
+	mov ax, 0
+	mov al, byte [n_x3]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+	cmp byte [s_x3], '+'
+	je _Calcular_f_x_x_3_es_positivo
+	fchs
+	_Calcular_f_x_x_3_es_positivo:
+	fadd qword [f_x]
+	fstp qword [f_x]
+
+
+	;multiplicando con coeficiente x_2
+	fld qword [xsub_n] ;Cargando x actual en memoria
+	fmul qword [xsub_n]
+
+	mov ax, 0
+	mov al, byte [n_x2]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+	cmp byte [s_x2], '+'
+	je _Calcular_f_x_x_2_es_positivo
+	fchs
+	_Calcular_f_x_x_2_es_positivo:
+	fadd qword [f_x]
+	fstp qword [f_x]
+
+	;multiplicando con coeficiente x_1
+	fld qword [xsub_n] ;Cargando x actual en memoria
+
+	mov ax, 0
+	mov al, byte [n_x1]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+	cmp byte [s_x1], '+'
+	je _Calcular_f_x_x_1_es_positivo
+	fchs
+	_Calcular_f_x_x_1_es_positivo:
+	fadd qword [f_x]
+	fstp qword [f_x]
+
+    ;sumando la constante
+    mov ax, 0
+	mov al, byte [n_x0]
+	mov word [temporal_word], AX
+    fild word [temporal_word]  	;Cargando el coeficiente entero
+    cmp byte [s_x0], '+'
+	je _Calcular_f_x_x_0_es_positivo
+	fchs
+	_Calcular_f_x_x_0_es_positivo:
+	fadd qword [f_x]
+	fstp qword [f_x]
+    ret
+
+_Calcular_d_f_x:
+
+	fldz        ;Cargando 0 a memoria
+    fstp qword [fprima_x]    ;Ese 0 se resetea a fprima_x
+
+    ;multiplicando con coeficiente x_5
+    fld qword [xsub_n] ;Cargando x actual en memoria
+    fmul qword [xsub_n]
+    fmul qword [xsub_n]
+    fmul qword [xsub_n]
+
+    mov ax, 0
+    mov al, byte [n_x5]
+    mov word [temporal_word], AX
+    fimul word [temporal_word]
+    mov word [temporal_word], 5
+    fimul word [temporal_word]
+
+    cmp byte [s_x5], '+'
+    je _Calcular_d_f_x_x_5_es_positivo
+	fchs
+	_Calcular_d_f_x_x_5_es_positivo:
+	fadd qword [fprima_x]
+    fstp qword [fprima_x]
+
+	;multiplicando con coeficiente x_4
+	fld qword [xsub_n] ;Cargando x actual en memoria
+	fmul qword [xsub_n]
+	fmul qword [xsub_n]
+
+	mov ax, 0
+	mov al, byte [n_x4]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+    mov word [temporal_word], 4
+    fimul word [temporal_word]
+	cmp byte [s_x4], '+'
+	je _Calcular_d_f_x_x_4_es_positivo
+	fchs
+	_Calcular_d_f_x_x_4_es_positivo:
+	fadd qword [fprima_x]
+	fstp qword [fprima_x]
+
+	;multiplicando con coeficiente x_3
+	fld qword [xsub_n] ;Cargando x actual en memoria
+	fmul qword [xsub_n]
+
+	mov ax, 0
+	mov al, byte [n_x3]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+    mov word [temporal_word], 3
+    fimul word [temporal_word]
+	cmp byte [s_x3], '+'
+	je _Calcular_d_f_x_x_3_es_positivo
+	fchs
+	_Calcular_d_f_x_x_3_es_positivo:
+	fadd qword [fprima_x]
+	fstp qword [fprima_x]
+
+
+	;multiplicando con coeficiente x_2
+	fld qword [xsub_n] ;Cargando x actual en memoria
+
+	mov ax, 0
+	mov al, byte [n_x2]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+    mov word [temporal_word], 2
+    fimul word [temporal_word]
+	cmp byte [s_x2], '+'
+	je _Calcular_d_f_x_x_2_es_positivo
+	fchs
+	_Calcular_d_f_x_x_2_es_positivo:
+	fadd qword [fprima_x]
+	fstp qword [fprima_x]
+
+	;multiplicando con coeficiente x_1
+	fld1
+	mov ax, 0
+	mov al, byte [n_x1]
+	mov word [temporal_word], AX
+	fimul word [temporal_word]
+	cmp byte [s_x1], '+'
+	je _Calcular_d_f_x_x_1_es_positivo
+	fchs
+	_Calcular_d_f_x_x_1_es_positivo:
+	fadd qword [fprima_x]
+	fstp qword [fprima_x]
+    ret
+
 
 
 _getEntrada:
@@ -131,28 +667,188 @@ _getEntrada:
     je _imprimirIntegral
 
     cmp al, 35h             ;A partir de aquí, si la opción está entre 5 y 8 retornará un mensaje de no disponible
-    je _noDisponible
+    je _graficar
 
-    cmp al, 36h             
-    je _noDisponible
+    cmp al, 36h
+    jne _getEntrada_entrada_7
+    call PedirDatos
+    call _metodoNewton
+    jmp _start
 
-    cmp al, 37h             
-    je _noDisponible
+	_getEntrada_entrada_7:
+    cmp al, 37h
+    jne _getEntrada_entrada_8
+    call PedirDatos
+	call _metodoSteffensen
+    jmp _start
 
-    cmp al, 38h             
-    je _noDisponible
-
-    ;Si la opción es 9, el programa se detendrá
-    cmp al, 39h             
+	_getEntrada_entrada_8:
+    cmp al, 38h
     je _Salir
 
     cmp al, 1bh             
     je _Escape
 
-    ;Si no es ninguna, mostrará error por opción incorrecta.
-    jmp _opcionInvalida ;saltando a la funcion de opcion invalida
 
-    ret     ;instrucción de retorno
+
+    ;Si no es ninguna, mostrará error por opción incorrecta.
+    call _opcionInvalida ;saltando a la funcion de opcion invalida
+
+    jmp _start
+
+
+
+PedirDatos:
+	call _lineaNueva
+    call _lineaNueva
+
+    ;Ingresando limite inferior
+    mov ah, 09h
+    mov dx, Output39
+    int 21h
+
+    mov ah, 01h         ; leyendo un caracter de entrada
+    int 21h                ;se le suma 30h para poder ser manejado
+    mov word [s_x_inferior], 0  ;se limpia el registro que va a contener al signo
+    mov [s_x_inferior], al      ;el signo ingresado por el usuario se guarda en el registro.
+
+    mov ah, 01h                 ;leyedo un caracter de entrada
+    int 21h
+    sub al, 30h                 ;se le suma 30h para poder ser manejado
+    mov word [x_inferior], 0    ;se limpia el registro que contendrá al límite inferior
+    mov [x_inferior], al        ;el digito de decenas ingresado por el usuario se guarda
+    mov ax, [x_inferior]        ;se multiplican el digito de las decenas
+    mul word [constante_10]     ;x10
+    mov [x_inferior], ax        ;el resultado se guarda en el registro del limite inferior
+
+    mov ah, 01h                 ;leyendo el digito de las unidades
+    int 21h
+    sub al, 30h                 ;se le restan 30h para ser manejados
+    add [x_inferior], al        ;
+
+
+    call _lineaNueva
+
+    push word 0				;Signo para impresion
+    push word [x_inferior]  ;Pasar el numero para imprimir
+	mov si, espacio_salida	;Donde almacenar la cadena
+	call _ConvertirATexto		;Hacer la conversion
+	add sp, 4				;Limpiar los numeros pasados
+	mov ah, 0x9 			;Preparar para imprimir
+	mov dx, espacio_salida	;Decirle que cadena imprimir
+	int 21h				;Ejecutar la impresion
+
+    call _lineaNueva
+    call _lineaNueva
+
+    ;Ingresando limite superior
+    mov ah, 09h
+    mov dx, Output40
+    int 21h
+
+    mov ah, 01h
+    int 21h
+    mov word [s_x_superior], 0
+    mov [s_x_superior], al
+
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov word [x_superior], 0
+    mov [x_superior], al
+    mov ax, [x_superior]
+    mul word [constante_10]
+    mov [x_superior], ax
+
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    add [x_superior], al
+
+
+    call _lineaNueva
+
+    push word 0				;Signo para impresion
+    push word [x_superior]  ;Pasar el numero para imprimir
+	mov si, espacio_salida	;Donde almacenar la cadena
+	call _ConvertirATexto		;Hacer la conversion
+	add sp, 4				;Limpiar los numeros pasados
+	mov ah, 0x9 			;Preparar para imprimir
+	mov dx, espacio_salida	;Decirle que cadena imprimir
+	int 21h				;Ejecutar la impresion
+
+    call _lineaNueva
+    call _lineaNueva
+
+    ;Ingresando # máximo de iteraciones
+    mov ah, 09h
+    mov dx, Output41
+    int 21h
+
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov word [s_maximas_iteraciones], 0
+    mov [s_maximas_iteraciones], al
+
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    mov word [maximas_iteraciones], 0
+    mov [maximas_iteraciones], al
+    mov ax, [maximas_iteraciones]
+    mul word [constante_10]
+    mov [maximas_iteraciones], ax
+
+    mov ah, 01h
+    int 21h
+    sub al, 30h
+    add [maximas_iteraciones], al
+
+
+    call _lineaNueva
+
+    push word 0				;Signo para impresion
+    push word [maximas_iteraciones]  ;Pasar el numero para imprimir
+	mov si, espacio_salida	;Donde almacenar la cadena
+	call _ConvertirATexto		;Hacer la conversion
+	add sp, 4				;Limpiar los numeros pasados
+	mov ah, 0x9 			;Preparar para imprimir
+	mov dx, espacio_salida	;Decirle que cadena imprimir
+	int 21h				;Ejecutar la impresion
+
+    call _lineaNueva
+    call _lineaNueva
+
+
+    ;Sacando el punto medio ( Xn )
+    fild word [x_inferior]
+    cmp word [s_x_inferior], '+'
+    je inferior_positivo
+    fchs
+
+    inferior_positivo:
+
+    fild word [x_superior]
+    cmp word [s_x_superior], '+'
+    je superior_positivo
+    fchs
+    superior_positivo:
+
+    faddp
+
+    fidiv word [constante_2]
+    fstp qword [xsub_n]
+
+    fld qword [xsub_n]
+    fstp qword [flotante]
+    call _imprimirflotante
+
+
+
+    ret
+
+
 
 _ingresarFuncion:
     mov ah, 09h
@@ -1085,6 +1781,334 @@ _noFuncion:
     je _start
 
     ret
+
+_graficar:
+    call _limpiarPantalla
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output27
+    int 21h
+
+    call _lineaNueva
+
+    mov ah, 09h
+    mov dx, Output28
+    int 21h
+
+    mov ah, 09h
+    mov dx, Output23
+    int 21h
+
+    mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
+    mov al, opcion
+    int 21h
+
+                            ;cmp: comparar dos operandos , si es igual se ejecuta el salto je
+    cmp al, 31h             ;Si el caracter almacenado en al es 31h (1 en ascii) se ejecutará el método de ingresar función
+    je _graficarFuncion
+
+    cmp al, 32h
+    je _pruebaGraficar
+    
+
+
+    ret
+
+%macro pintar_pixel 3
+    push ax
+    push bx
+    push di
+    xor ax, ax
+    xor bx, bx
+    xor di, di
+    mov ax, 320d
+    mov bx, %1
+    mul bx
+    add ax, %2
+    mov di, ax
+    pop di
+    pop bx
+    pop ax
+%endmacro
+
+%macro pintar_marco 5
+    push si
+    xor si, si
+    mov si, %1
+
+    %%ciclo1:
+        pintar_pixel %3, si, %5
+        pintar_pixel %4, si, %5
+        inc si
+        cmp si, %2
+    jne %%ciclo1
+
+    xor si, si
+    mov si, %3
+    %%ciclo2:
+        pintar_pixel si, %2, %5
+        pintar_pixel si, %1, %5
+        inc si
+        cmp si, %4
+    jne %%ciclo2
+    pop si
+
+    mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
+    int 21h
+
+    jmp _start
+
+%endmacro
+
+_graficarFuncion:
+    mov ah, 00h
+    mov al, 13h
+    int 10h
+
+    pintar_marco 20d, 299d, 20d, 180d, 10d
+
+    mov ah, 01h
+    int 21h
+
+    jmp _start
+
+_pruebaGraficar:
+    mov ah, 00
+    mov al, 13h
+    int 10h
+
+    mov dx, 0
+    mov si, [h]
+    ejeVertical:
+        mov ah, 0ch
+        mov al, 4
+        mov bh, 0h
+        mov cx, 20
+        int 10h
+        inc dx
+        inc si
+        cmp si, 200
+        jne ejeVertical
+
+    mov cx, 0
+    mov si, [w]
+    ejeHorizontal:
+        mov ah, 0ch
+        mov al, 4
+        mov bh, 0h
+        mov dx, 180
+        int 10h
+        inc cx
+        inc si
+        cmp si, 320
+        jne ejeHorizontal
+
+
+    ;pintando punto
+    ;el 0 en x va a ser ahora 20, sumarle 20 a todo
+    mov ah, 0ch
+    mov si, coory
+    ;sub 
+    mov cx, 150
+    mov dx, 300
+    int 10h
+
+    mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
+    int 21h
+
+    jmp _start
+
+    ret
+
+_convertirNegativo:
+    xor cl, [n_x5]
+    add cl, 1
+    mov [n_x5], cl
+
+    mov al, [n_x5]
+    AAM
+    mov bx, ax
+    mov ah, 02h
+    mov dl, bh
+    add dl, 30h
+    int 21h
+    
+    mov ah, 02h
+    mov dl, bl
+    add dl, 30h
+    int 21h
+
+    mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
+    int 21h
+
+    jmp _start
+
+
+;La cadena de salida debe estar en SI
+_ConvertirATexto:
+	mov ax, [esp+2]
+	;Contador de cuantos caracteres hemos usado
+	mov cx, 0x0
+
+	;Caso particular que el numero sea 0
+	cmp ax, 0
+	jne _ConvertirATexto_no_es_cero
+	;Poner el ascii de 0
+	mov [si], byte 48
+	;Siguiente espacio disponible para caracter
+	inc si
+	jmp _ConvertirATexto_salida_2
+
+	_ConvertirATexto_no_es_cero:
+
+	mov dx, [esp+4]					;Obtener el signo del stack
+	;Si es positivo, no imprimir nada
+	cmp dx, 0
+	je _ConvertirATexto_positivo
+	mov [si], byte 0x2d				;Si es negativo, agregar el caracter - a la cadena
+	;Siguiente espacio disponible para caracter
+	inc si
+
+	_ConvertirATexto_positivo:
+	;Limpiar DX para que no afecte en la division
+	mov dx, 0
+
+	_ConvertirATexto_loop1:
+		cmp ax, 0					;Si el numero ya llego a 0, paramos
+		je _ConvertirATexto_salida1
+		;Divisor
+		mov bx, 10
+		;Hacer la division
+		div bx
+		;Agregarle 48 para convertirlo en un caracter ascii
+		add dx, byte 48
+		;Lo guardamos en el stack
+		push dx
+		;Limpiar DX para que no afecte en la division
+		mov dx, 0
+		;aumentar en uno la cantidad de caracteres que usamos
+		inc cx
+		jmp _ConvertirATexto_loop1
+
+
+	_ConvertirATexto_salida1:
+		_ConvertirATexto_loop2:
+		cmp cx, 0					;Si aun quedan caracteres en la cadena, seguir sacando
+		je _ConvertirATexto_salida_2
+		pop AX						;Obtener el numero del stack y sacarlo
+		mov [si], ax				;Agregarla a la cadena de salida
+		;Siguiente espacio disponible para caracter
+		inc si
+		;Restarle uno a la cantidad de caracteres que quedan en el stack
+		sub cx, 1
+		jmp _ConvertirATexto_loop2
+
+	_ConvertirATexto_salida_2:
+		;Agregar $ para poder mandarlo a imprimir
+		mov [si], byte '$'
+		ret
+
+
+_imprimirflotante:
+    call _lineaNueva
+    fld qword [flotante]
+
+
+    ;Vemos el signo antes de hacer las operaciones
+    ;Este comando es equivalente a cmp flotante, 0
+    ftst
+    fnstsw ax
+	sahf
+	jae _imprimirflotante_positivo
+	;Le cambiamos de signo
+	fchs
+	;Lo guardamos para futuras operaciones
+	fst qword [flotante]
+	;Imprimimos un -
+	mov ah, 02h
+	mov dl, byte '-'
+	int 21h
+	_imprimirflotante_positivo:
+
+
+    frndint
+    fistp word [entero]
+
+	push word 0				;Signo para impresion
+    push word [entero]		;Pasar el numero para imprimir
+	mov si, espacio_salida	;Donde almacenar la cadena
+	call _ConvertirATexto		;Hacer la conversion
+	add sp, 4				;Limpiar los numeros pasados
+	mov AH, 0x9 			;Preparar para imprimir
+	mov DX, espacio_salida	;Decirle que cadena imprimir
+	int 21h				;Ejecutar la impresion
+
+    mov ah, 09h
+    mov dx, punto
+    int 21h
+
+
+    fld qword [flotante]
+    fisub word [entero]
+    fstp qword [flotante]
+
+    mov si, [no_decimales]
+    ;empezar el ciclo
+    _imprimirdecimales:
+        cmp si, 0
+        je _finimpresion
+        push si
+        fld qword [flotante]
+        fmul qword [multiplicador]
+        fst qword [flotante]
+        frndint
+        fistp word [entero]
+
+
+		push word 0				;Signo para impresion
+		push word [entero]		;Pasar el numero para imprimir
+		mov si, espacio_salida	;Donde almacenar la cadena
+		call _ConvertirATexto	;Hacer la conversion
+		add sp, 4				;Limpiar los numeros pasados al stack
+
+		mov ah, 0x9 			;Preparar para imprimir
+		mov dx, espacio_salida	;Decirle que cadena imprimir
+		int 21h				;Ejecutar la impresion
+
+
+
+        fld qword [flotante]
+        fisub word [entero]
+        fstp qword [flotante]
+        pop si
+        dec si
+        jmp _imprimirdecimales
+
+	_finimpresion:
+    	ret
+
+
+
+
+
+
+_esnegativo:
+    mov ah, 09h
+    mov dx, Output31
+    int 21h
+
+    mov ah, 01h             ;Lee un caracter ingresado por el usuario, y se almacena en el registro al
+    int 21h
+
+
+
+
+
+
+
+
+
 
 
 
